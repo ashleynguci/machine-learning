@@ -81,6 +81,20 @@ def cal_rademacher_risk(m, Xtraining, Yrandom):
         
     return (1/2) - np.sum(epsilon)/200 #Second term of Rademacher
 
+def cal_gen_bound_VC_dim(m):
+    e = 2.71828
+    #VC dimension (which in the formula of the bound is called "d") is here [number of features +1].(Discussion in the FORUM Quiz 5)
+    #The best it can shatter is d + 1 in a d-dimensional space https://engineering.purdue.edu/ChanGroup/ECE595/files/Lecture27_vc.pdf
+    d = 2 + 1
+    Xtraining = Xtr[:m,:] #the first m samples of the training set
+    Ytraining = ytr[:m]
+    
+    emp_risk = cal_emp_risk(Xtraining, Ytraining)
+      
+    return emp_risk + math.sqrt(2*math.log(e*m/d)/(m/d)) + math.sqrt(math.log(1/0.05)/(2*m))
+
+
 for i in print_at_n:
     print("Rademacher " + str(i) + " samples: " + str(cal_gen_bound(i)))
+    print("Generalization bound based on VC dimension " + str(cal_gen_bound_VC_dim(i)))
 
